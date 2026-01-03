@@ -33,3 +33,20 @@ function decodeROT13(input) {
         return String.fromCharCode(start + (c.charCodeAt(0) - start + 13) % 26);
     });
 }
+
+// ASCII decoder - converts decimal ASCII values to characters
+function decodeASCII(input) {
+    // Split on non-digit characters (spaces, commas, etc)
+    return input.split(/\D+/)
+        .filter(num => num)
+        .map(num => String.fromCharCode(parseInt(num)))
+        .join('');
+}
+
+// Morse code decoder - converts dots and dashes to text
+function decodeMorse(input) {
+    // Split on spaces and map each morse sequence to its character
+    return input.split(' ')
+        .map(code => morseToChar[code] || '?')
+        .join('');
+}

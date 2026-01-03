@@ -15,7 +15,7 @@ const CipherRegistry = {
         { id: 'base45', name: 'Base45', category: 'Base Encodings', bidirectional: true },
         { id: 'base36', name: 'Base36', category: 'Base Encodings', bidirectional: true },
 
-            // URL and Web Encodings
+        // URL and Web Encodings
         { id: 'url', name: 'URL Encoding', category: 'Web Encodings', bidirectional: true },
         { id: 'html', name: 'HTML Entities', category: 'Web Encodings', bidirectional: true },
         { id: 'unicode', name: 'Unicode Escape', category: 'Web Encodings', bidirectional: true },
@@ -34,3 +34,13 @@ const CipherRegistry = {
             category: 'Substitution',
             bidirectional: true
         })),
+
+        // Classic Ciphers
+        { id: 'caesar', name: 'Caesar Cipher', category: 'Substitution', bidirectional: true },
+        { id: 'atbash', name: 'Atbash', category: 'Substitution', bidirectional: true },
+        { id: 'affine', name: 'Affine Cipher', category: 'Substitution', bidirectional: true },
+        { id: 'vigenere', name: 'Vigenère Cipher', category: 'Substitution', bidirectional: true },
+        { id: 'playfair', name: 'Playfair', category: 'Substitution', bidirectional: true },
+        { id: 'polybius', name: 'Polybius Square', category: 'Substitution', bidirectional: true },
+        { id: 'bacon', name: 'Bacon Cipher', category: 'Substitution', bidirectional: true },
+        { id: 'morse', name: 'Morse Code', category: 'Substitution', bidirectional: true },

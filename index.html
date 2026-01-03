@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LotL Decoder - Cybersecurity Tool</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1> LotL Encoder/Decoder</h1>
+            <p class="tagline">Multi-Cipher Encoding & Decoding for Security Analysis</p>
+        </header>
+
+        <!-- Info section explaining the tool's purpose -->
+        <div class="decoder-section">
+            <div class="info">
+                <strong> What's this for?</strong> Security analysts often encounter encoded malicious commands. 
+                This tool supports the top 10 most common encoding methods used in real-world attacks from simple Base64 
+                to ROT13 and Hex. Encode your own data for testing or decode suspicious strings instantly.
+            </div>
+        </div>
+
+        <!-- Main encode/decode split view -->
+        <div class="split-section">
+            <!-- Left side: DECODE -->
+            <div class="decoder-section">
+                <h2 class="section-title"> Decode</h2>
+                
+                <div class="input-group">
+                    <label>Select Cipher Method:</label>
+                    <select id="decodeCipher">
+                        <option value="base64">Base64 (most common)</option>
+                        <option value="hex">Hexadecimal</option>
+                        <option value="url">URL Encoding</option>
+                        <option value="rot13">ROT13</option>
+                        <option value="binary">Binary</option>
+                        <option value="ascii">ASCII Decimal</option>
+                        <option value="morse">Morse Code</option>
+                        <option value="reverse">Reverse String</option>
+                        <option value="caesar">Caesar Cipher (shift 3)</option>
+                        <option value="atbash">Atbash Cipher</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label> Encoded Input:</label>
+                    <textarea id="decodeInput" placeholder="Paste your encoded string here..."></textarea>
+                </div>
+
+                <div class="button-grid">
+                    <button class="primary-btn" onclick="performDecode()">🔍 Decode</button>
+                    <button onclick="autoDetectDecode()"> Auto-Detect</button>
+                </div>
+
+                <div id="decodeWarnings"></div>
+
+                <div class="input-group">
+                    <label> Decoded Output:</label>
+                    <div class="output-box" id="decodeOutput">
+                        <button class="copy-btn" onclick="copyOutput('decode')">📋 Copy</button>
+                        <span id="decodeOutputText">Your decoded text will show up here...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right side: ENCODE -->
+            <div class="decoder-section">
+                <h2 class="section-title"> Encode</h2>
+                
+                <div class="input-group">
+                    <label>Select Cipher Method:</label>
+                    <select id="encodeCipher">
+                        <option value="base64">Base64 (most common)</option>
+                        <option value="hex">Hexadecimal</option>
+                        <option value="url">URL Encoding</option>
+                        <option value="rot13">ROT13</option>
+                        <option value="binary">Binary</option>
+                        <option value="ascii">ASCII Decimal</option>
+                        <option value="morse">Morse Code</option>
+                        <option value="reverse">Reverse String</option>
+                        <option value="caesar">Caesar Cipher (shift 3)</option>
+                        <option value="atbash">Atbash Cipher</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label> Plain Text Input:</label>
+                    <textarea id="encodeInput" placeholder="Type the text you want to encode..."></textarea>
+                </div>
+
+                <div class="button-grid">
+                    <button class="primary-btn" onclick="performEncode()"> Encode</button>
+                    <button onclick="encodeAll()"> Encode All</button>
+                </div>
+
+                <div class="input-group">
+                    <label> Encoded Output:</label>
+                    <div class="output-box" id="encodeOutput">
+                        <button class="copy-btn" onclick="copyOutput('encode')"> Copy</button>
+                        <span id="encodeOutputText">Your encoded text will appear here...</span>
+                    </div>
+                </div>
+            </div>
+        </div>

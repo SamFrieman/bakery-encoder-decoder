@@ -64,3 +64,13 @@ function decodeCaesar(input) {
         return String.fromCharCode(start + (c.charCodeAt(0) - start - 3 + 26) % 26);
     });
 }
+
+// Atbash cipher decoder - mirrors the alphabet (A↔Z, B↔Y, etc)
+// Note: Atbash is its own inverse
+function decodeAtbash(input) {
+    return input.replace(/[a-zA-Z]/g, function(c) {
+        const start = c <= 'Z' ? 65 : 97;
+        // Mirror the position in the alphabet
+        return String.fromCharCode(start + (25 - (c.charCodeAt(0) - start)));
+    });
+}

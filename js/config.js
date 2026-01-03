@@ -88,3 +88,8 @@ const ThreatPatterns = {
         'sh'
     ]
 };
+
+// Get all threat patterns as flat array
+function getAllThreatPatterns() {
+    return Object.values(ThreatPatterns).flat();
+}

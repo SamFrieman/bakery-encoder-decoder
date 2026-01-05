@@ -5,7 +5,7 @@
 // Used Dcode to validate
 
 const CipherRegistry = {
-    // List of all available ciphers with metadata
+    // Master list of all available ciphers with metadata
     ciphers: [
         // Base Encodings
         { id: 'base64', name: 'Base64', category: 'Base Encodings', bidirectional: true },
@@ -17,7 +17,7 @@ const CipherRegistry = {
         { id: 'base62', name: 'Base62', category: 'Base Encodings', bidirectional: true },
         { id: 'base45', name: 'Base45', category: 'Base Encodings', bidirectional: true },
         { id: 'base36', name: 'Base36', category: 'Base Encodings', bidirectional: true },
-
+        
         // URL and Web Encodings
         { id: 'url', name: 'URL Encoding', category: 'Web Encodings', bidirectional: true },
         { id: 'html', name: 'HTML Entities', category: 'Web Encodings', bidirectional: true },
@@ -37,7 +37,7 @@ const CipherRegistry = {
             category: 'Substitution',
             bidirectional: true
         })),
-
+        
         // Classic Ciphers
         { id: 'caesar', name: 'Caesar Cipher', category: 'Substitution', bidirectional: true },
         { id: 'atbash', name: 'Atbash', category: 'Substitution', bidirectional: true },
@@ -47,7 +47,7 @@ const CipherRegistry = {
         { id: 'polybius', name: 'Polybius Square', category: 'Substitution', bidirectional: true },
         { id: 'bacon', name: 'Bacon Cipher', category: 'Substitution', bidirectional: true },
         { id: 'morse', name: 'Morse Code', category: 'Substitution', bidirectional: true },
-
+        
         // Transposition Ciphers
         { id: 'reverse', name: 'Reverse String', category: 'Transposition', bidirectional: true },
         { id: 'railfence', name: 'Rail Fence', category: 'Transposition', bidirectional: true },
@@ -241,7 +241,7 @@ const Ciphers = {
             return result;
         }
     },
-
+    
     // URL encoding
     url: {
         encode: (input) => encodeURIComponent(input),
@@ -485,7 +485,7 @@ const Ciphers = {
     }
 };
 
-/ Initialize all ROT ciphers (ROT1 through ROT25)
+// Initialize all ROT ciphers (ROT1 through ROT25)
 for (let i = 1; i <= 25; i++) {
     Ciphers[`rot${i}`] = Ciphers.generateRot(i);
 }
@@ -571,7 +571,6 @@ Ciphers.base36 = {
 };
 
 // Additional cipher stubs to reach 100
-// Many of these aren't commonly used like yenc but are fun to include 
 Ciphers.affine = { encode: (i) => 'Affine cipher not yet implemented', decode: (i) => 'Not implemented' };
 Ciphers.vigenere = { encode: (i) => 'Vigenère cipher not yet implemented', decode: (i) => 'Not implemented' };
 Ciphers.playfair = { encode: (i) => 'Playfair cipher not yet implemented', decode: (i) => 'Not implemented' };

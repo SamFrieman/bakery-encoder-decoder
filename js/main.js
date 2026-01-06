@@ -191,48 +191,53 @@ function performDecode() {
 // Auto-detect cipher type by trying multiple methods
 function autoDetectDecode() {
     const input = document.getElementById('decodeInput').value.trim();
+    const button = event.target;
     
     if (!input) {
         displayDecodeOutput('Please enter text to decode');
         return;
     }
-    
-    try {
-        securityCheck(input, 'decode');
-        const cleanInput = sanitizeInput(input);
-        
-        let results = '=== AUTO-DETECTION RESULTS ===\n\n';
-        let foundResults = 0;
-        
-        // Try only the most common bidirectional ciphers
-        const commonCiphers = ['base64', 'hex', 'url', 'binary', 'rot13', 'decimal', 'morse', 'reverse'];
-        
-        commonCiphers.forEach(cipherId => {
-            try {
-                const cipher = Ciphers[cipherId];
-                if (cipher && cipher.decode) {
-                    const decoded = cipher.decode(cleanInput);
-                    
-                    // Only show if result contains readable ASCII
-                    if (decoded && /[\x20-\x7E]/.test(decoded)) {
-                        results += `${cipherId.toUpperCase()}:\n${decoded}\n\n`;
-                        foundResults++;
+
+    setButtonLoading(button, true);
+
+    setTimeout(() => {
+        try {
+            securityCheck(input, 'decode');
+            const cleanInput = sanitizeInput(input);
+            let results = '=== AUTO-DETECTION RESULTS ===\n\n';
+            let foundResults = 0;
+            
+            // Try only the most common bidirectional ciphers
+            const commonCiphers = ['base64', 'hex', 'url', 'binary', 'rot13', 'decimal', 'morse', 'reverse'];
+            
+            commonCiphers.forEach(cipherId => {
+                try {
+                    const cipher = Ciphers[cipherId];
+                    if (cipher && cipher.decode) {
+                        const decoded = cipher.decode(cleanInput);
+                        
+                        // Only show if result contains readable ASCII
+                        if (decoded && /[\x20-\x7E]/.test(decoded)) {
+                            results += `${cipherId.toUpperCase()}:\n${decoded}\n\n`;
+                            foundResults++;
+                        }
                     }
+                } catch (e) {
+                    // Skip failed decodings silently
                 }
-            } catch (e) {
-                // Skip failed decodings silently
+            });
+            
+            if (foundResults === 0) {
+                results = 'No readable output detected from common cipher methods.';
             }
-        });
-        
-        if (foundResults === 0) {
-            results = 'No readable output detected from common cipher methods.';
+            
+            displayDecodeOutput(results, foundResults > 0);
+        } catch (error) {
+            displayDecodeOutput('Auto-detection failed: ' + error.message);
+        } finally {
+            setButtonLoading(button, false);  // NEW
         }
-        
-        displayDecodeOutput(results);
-        
-    } catch (error) {
-        displayDecodeOutput('Auto-detection failed: ' + error.message);
-    }
+    }, 50);
 }
 
 // Perform encoding operation
@@ -284,43 +289,50 @@ function performEncode() {
 // Encode with all available methods
 function encodeAll() {
     const input = document.getElementById('encodeInput').value.trim();
+    const button = event.target;
     
     if (!input) {
         displayEncodeOutput('Please enter text to encode');
         return;
     }
     
-    try {
-        securityCheck(input, 'encode');
-        const cleanInput = sanitizeInput(input);
-        
-        let results = '=== ENCODED WITH ALL CIPHERS ===\n\n';
-        
-        // Only use implemented ciphers
-        const implementedCiphers = [
-            'base64', 'base32', 'base16', 'base58', 'base85',
-            'hex', 'binary', 'octal', 'decimal',
-            'url', 'html', 'unicode',
-            'rot13', 'caesar', 'atbash', 'morse', 'reverse', 'bacon'
-        ];
-        
-        implementedCiphers.forEach(cipherId => {
-            try {
-                const cipher = Ciphers[cipherId];
-                if (cipher && cipher.encode) {
-                    const encoded = cipher.encode(cleanInput);
-                    results += `${cipherId.toUpperCase()}:\n${encoded}\n\n`;
+    setButtonLoading(button, true);
+    
+    setTimeout(() => {
+        try {
+            securityCheck(input, 'encode');
+            const cleanInput = sanitizeInput(input);
+            
+            let results = '=== ENCODED WITH ALL CIPHERS ===\n\n';
+            
+            // Only use implemented ciphers
+            const implementedCiphers = [
+                'base64', 'base32', 'base16', 'base58', 'base85',
+                'hex', 'binary', 'octal', 'decimal',
+                'url', 'html', 'unicode',
+                'rot13', 'caesar', 'atbash', 'morse', 'reverse', 'bacon'
+            ];
+            
+            implementedCiphers.forEach(cipherId => {
+                try {
+                    const cipher = Ciphers[cipherId];
+                    if (cipher && cipher.encode) {
+                        const encoded = cipher.encode(cleanInput);
+                        results += `${cipherId.toUpperCase()}:\n${encoded}\n\n`;
+                    }
+                } catch (e) {
+                    results += `${cipherId.toUpperCase()}: Encoding failed\n\n`;
                 }
-            } catch (e) {
-                results += `${cipherId.toUpperCase()}: Encoding failed\n\n`;
-            }
-        });
-        
-        displayEncodeOutput(results);
-        
-    } catch (error) {
-        displayEncodeOutput('Encode all failed: ' + error.message);
-    }
+            });
+            
+            displayEncodeOutput(results, true);
+            
+        } catch (error) {
+            displayEncodeOutput('Encode all failed: ' + error.message);
+        } finally {
+            setButtonLoading(button, false);
+        }
+    }, 50);
 }
 
 // Check decoded text for potentially dangerous commands

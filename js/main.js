@@ -355,12 +355,39 @@ function checkForThreats(decodedText) {
 }
 
 // Display functions
-function displayDecodeOutput(text) {
-    document.getElementById('decodeOutputText').textContent = text;
+function displayDecodeOutput(text, isSuccess = false) {
+    const outputElement = document.getElementById('decodeOutputText');
+    const outputBox = document.getElementById('decodeOutput');
+    
+    outputElement.textContent = text;
+    
+    if (isSuccess) {
+        outputBox.classList.add('success');
+        setTimeout(() => outputBox.classList.remove('success'), 300);
+    }
 }
 
-function displayEncodeOutput(text) {
-    document.getElementById('encodeOutputText').textContent = text;
+function displayEncodeOutput(text, isSuccess = false) {
+    const outputElement = document.getElementById('encodeOutputText');
+    const outputBox = document.getElementById('encodeOutput');
+    
+    outputElement.textContent = text;
+    
+    if (isSuccess) {
+        outputBox.classList.add('success');
+        setTimeout(() => outputBox.classList.remove('success'), 300);
+    }
+}
+
+function setButtonLoading(button, isLoading) {
+    if (isLoading) {
+        button.disabled = true;
+        button.dataset.originalText = button.textContent;
+        button.innerHTML = '<span class="spinner"></span>' + button.dataset.originalText;
+    } else {
+        button.disabled = false;
+        button.textContent = button.dataset.originalText;
+    }
 }
 
 // Copy output to clipboard

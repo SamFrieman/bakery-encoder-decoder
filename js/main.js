@@ -212,7 +212,7 @@ function performDecode() {
             checkForThreats(result);
         
    } catch (error) {
-            displayDecodeOutput('Decoding failed: ' + error.message);
+          displayDecodeOutput('Cipher not supported or decode not available', false, true);
         } finally {
             //Remove loading state
             setButtonLoading(button, false);
@@ -265,7 +265,7 @@ function autoDetectDecode() {
             
             displayDecodeOutput(results, foundResults > 0);
         } catch (error) {
-            displayDecodeOutput('Auto-detection failed: ' + error.message);
+             displayDecodeOutput('Auto-detection failed: ' + error.message, false, true);
         } finally {
             setButtonLoading(button, false);  // NEW
         }
@@ -310,7 +310,7 @@ function performEncode() {
             displayEncodeOutput(result, true);  // Added success param
             
         } catch (error) {
-            displayEncodeOutput('Encoding failed: ' + error.message);
+           displayEncodeOutput('Cipher not supported', false, true);
         } finally {
             setButtonLoading(button, false); // Remove loading state
         }
@@ -360,7 +360,7 @@ function encodeAll() {
             displayEncodeOutput(results, true);
             
         } catch (error) {
-            displayEncodeOutput('Encode all failed: ' + error.message);
+            displayEncodeOutput('Encode all failed: ' + error.message, false, true);
         } finally {
             setButtonLoading(button, false);
         }

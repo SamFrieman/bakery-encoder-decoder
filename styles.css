@@ -411,3 +411,21 @@ select {
     margin-left: 10px;
     animation: fadeIn 0.3s ease;
 }
+
+.shortcut-hint {
+    display: inline-block;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(0, 255, 65, 0.2);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.75em;
+    font-family: 'Consolas', monospace;
+    margin-left: 8px;
+    color: #888;
+}
+
+.button-with-hint {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}

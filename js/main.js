@@ -409,27 +409,37 @@ function checkForThreats(decodedText) {
 }
 
 // Display functions
-function displayDecodeOutput(text, isSuccess = false) {
+function displayDecodeOutput(text, isSuccess = false, isError = false) {
     const outputElement = document.getElementById('decodeOutputText');
     const outputBox = document.getElementById('decodeOutput');
     
     outputElement.textContent = text;
     
+    // Remove previous states
+    outputBox.classList.remove('success', 'error');
+    
     if (isSuccess) {
         outputBox.classList.add('success');
         setTimeout(() => outputBox.classList.remove('success'), 300);
+    } else if (isError) {
+        outputBox.classList.add('error');
     }
 }
 
-function displayEncodeOutput(text, isSuccess = false) {
+function displayEncodeOutput(text, isSuccess = false, isError = false) {
     const outputElement = document.getElementById('encodeOutputText');
     const outputBox = document.getElementById('encodeOutput');
     
     outputElement.textContent = text;
     
+    // Remove previous states
+    outputBox.classList.remove('success', 'error');
+    
     if (isSuccess) {
         outputBox.classList.add('success');
         setTimeout(() => outputBox.classList.remove('success'), 300);
+    } else if (isError) {
+        outputBox.classList.add('error');
     }
 }
 

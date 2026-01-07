@@ -127,10 +127,6 @@ function populateCipherReference() {
             contentDiv.appendChild(overviewDiv);
         }
         
-        // Create cipher list container
-        const cipherListDiv = document.createElement('div');
-        cipherListDiv.className = 'cipher-list';
-        
         // Group similar ciphers
         const groupedCiphers = groupSimilarCiphers(categories[categoryName]);
         
@@ -149,10 +145,9 @@ function populateCipherReference() {
             
             cipherItem.appendChild(cipherName);
             cipherItem.appendChild(cipherDesc);
-            cipherListDiv.appendChild(cipherItem);
+            contentDiv.appendChild(cipherItem);
         });
         
-        contentDiv.appendChild(cipherListDiv);
         categoryDiv.appendChild(headerDiv);
         categoryDiv.appendChild(contentDiv);
         container.appendChild(categoryDiv);

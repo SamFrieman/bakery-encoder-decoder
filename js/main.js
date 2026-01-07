@@ -171,7 +171,7 @@ function performDecode() {
     }
 }
 
-// IMPROVED Auto-detect cipher type by trying multiple methods
+// Auto-detect cipher type by trying multiple methods
 function autoDetectDecode() {
     const input = document.getElementById('decodeInput').value.trim();
     
@@ -184,36 +184,22 @@ function autoDetectDecode() {
         securityCheck(input, 'decode');
         const cleanInput = sanitizeInput(input);
         
-        // Try all bidirectional ciphers and score the results
-        const results = [];
+        let results = '=== AUTO-DETECTION RESULTS ===\n\n';
+        let foundResults = 0;
         
-        // Comprehensive list of ciphers to try
-        const ciphersToTry = [
-            'base64', 'base32', 'base16', 'base58', 'base85', 'base62', 'base36',
-            'hex', 'binary', 'octal', 'decimal',
-            'url', 'html', 'unicode',
-            'morse', 'bacon', 'atbash', 'reverse',
-            ...Array.from({length: 25}, (_, i) => `rot${i+1}`)
-        ];
+        // Try only the most common bidirectional ciphers
+        const commonCiphers = ['base64', 'hex', 'url', 'binary', 'rot13', 'decimal', 'morse', 'reverse'];
         
-        ciphersToTry.forEach(cipherId => {
+        commonCiphers.forEach(cipherId => {
             try {
                 const cipher = Ciphers[cipherId];
                 if (cipher && cipher.decode) {
                     const decoded = cipher.decode(cleanInput);
                     
-                    if (decoded && decoded.length > 0) {
-                        // Score the decoded text
-                        const score = scoreDecodedText(decoded);
-                        
-                        // Only include results with reasonable scores or that are printable
-                        if (score > 10 || (score > 0 && /^[\x20-\x7E\s]+$/.test(decoded))) {
-                            results.push({
-                                cipher: cipherId,
-                                decoded: decoded,
-                                score: score
-                            });
-                        }
+                    // Only show if result contains readable ASCII
+                    if (decoded && /[\x20-\x7E]/.test(decoded)) {
+                        results += `${cipherId.toUpperCase()}:\n${decoded}\n\n`;
+                        foundResults++;
                     }
                 }
             } catch (e) {
@@ -221,37 +207,11 @@ function autoDetectDecode() {
             }
         });
         
-        // Sort by score (highest first)
-        results.sort((a, b) => b.score - a.score);
-        
-        if (results.length === 0) {
-            displayDecodeOutput('No readable output detected from any cipher method.\n\nTips:\n- Ensure the input is properly formatted\n- Try selecting a specific cipher manually\n- Check if the input is actually encoded', false);
-            return;
+        if (foundResults === 0) {
+            results = 'No readable output detected from common cipher methods.';
         }
         
-        // Show top 10 results or all if less than 10
-        const topResults = results.slice(0, 10);
-        let output = '=== AUTO-DETECTION RESULTS ===\n';
-        output += `Found ${results.length} possible match${results.length === 1 ? '' : 'es'}. Showing top ${topResults.length}:\n\n`;
-        
-        topResults.forEach((result, index) => {
-            const cipherName = CipherRegistry.getCipher(result.cipher)?.name || result.cipher.toUpperCase();
-            const confidence = result.score > 50 ? 'High' : result.score > 25 ? 'Medium' : 'Low';
-            
-            output += `${index + 1}. ${cipherName} (Confidence: ${confidence}, Score: ${result.score.toFixed(1)})\n`;
-            output += `${result.decoded.substring(0, 200)}${result.decoded.length > 200 ? '...' : ''}\n\n`;
-        });
-        
-        if (results.length > 10) {
-            output += `... and ${results.length - 10} more possible matches.\n`;
-        }
-        
-        displayDecodeOutput(output, false);
-        
-        // Check the top result for threats
-        if (topResults.length > 0) {
-            checkForThreats(topResults[0].decoded);
-        }
+        displayDecodeOutput(results, false);
         
     } catch (error) {
         displayDecodeOutput('Auto-detection failed: ' + error.message, true);
@@ -314,33 +274,24 @@ function encodeAll() {
         
         let results = '=== ENCODED WITH ALL CIPHERS ===\n\n';
         
-        // Group by category
-        const categories = {};
-        CipherRegistry.ciphers.forEach(cipher => {
-            if (!categories[cipher.category]) {
-                categories[cipher.category] = [];
-            }
-            categories[cipher.category].push(cipher);
-        });
+        // Only use implemented ciphers
+        const implementedCiphers = [
+            'base64', 'base32', 'base16', 'base58', 'base85',
+            'hex', 'binary', 'octal', 'decimal',
+            'url', 'html', 'unicode',
+            'rot13', 'caesar', 'atbash', 'morse', 'reverse', 'bacon'
+        ];
         
-        Object.keys(categories).sort().forEach(category => {
-            results += `--- ${category} ---\n\n`;
-            
-            categories[category].forEach(cipherInfo => {
-                try {
-                    const cipher = Ciphers[cipherInfo.id];
-                    if (cipher && cipher.encode) {
-                        const encoded = cipher.encode(cleanInput);
-                        // Truncate long outputs
-                        const display = encoded.length > 200 ? encoded.substring(0, 200) + '...' : encoded;
-                        results += `${cipherInfo.name}:\n${display}\n\n`;
-                    }
-                } catch (e) {
-                    results += `${cipherInfo.name}: Encoding failed\n\n`;
+        implementedCiphers.forEach(cipherId => {
+            try {
+                const cipher = Ciphers[cipherId];
+                if (cipher && cipher.encode) {
+                    const encoded = cipher.encode(cleanInput);
+                    results += `${cipherId.toUpperCase()}:\n${encoded}\n\n`;
                 }
-            });
-            
-            results += '\n';
+            } catch (e) {
+                results += `${cipherId.toUpperCase()}: Encoding failed\n\n`;
+            }
         });
         
         displayEncodeOutput(results, false);

@@ -183,7 +183,7 @@ Contributions, issues, and feature requests are welcome. Feel free to check the 
 - Threat pattern detection
 - Comprehensive cipher reference guide
 
-### Version 2.0
+### Version 1.1
 - 100 cipher methods now fully implemented
 - Comprehensive automated testing suite for all modules.
 - Auto-detect capabilities optimized for high-speed analysis.

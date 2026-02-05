@@ -1,8 +1,8 @@
 // Application configuration and constants
 
 const AppConfig = {
-    version: '2.0.0',
-    name: 'LotL Encoder/Decoder',
+    version: '1.2.0',
+    name: 'Bakery Encoder/Decoder',
     maxInputLength: 50000,
     rateLimit: {
         maxRequests: 100,

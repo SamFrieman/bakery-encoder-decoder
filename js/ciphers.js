@@ -237,7 +237,7 @@ const Ciphers = {
             return result || '0';
         },
         decode: (input) => {
-            const alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+            const alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
             let num = BigInt(0);
             
             for (let i = 0; i < input.length; i++) {

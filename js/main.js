@@ -158,9 +158,6 @@ function performDecode() {
         
         // Perform decoding
         const result = cipher.decode(cleanInput);
-        
-        // Sanitize and display output
-        const safeOutput = sanitizeOutput(result);
         displayDecodeOutput(result, false);
         
         // Check for threats
@@ -268,11 +265,13 @@ function analyzeInput(input) {
         hasSpecialChars: /[^a-zA-Z0-9\s]/.test(input),
         onlyHex: /^[0-9A-Fa-f\s:,-]+$/.test(input),
         onlyBase64: /^[A-Za-z0-9+/=\s-]+$/.test(input),
+        onlyBase32: /^[A-Z2-7=\s]+$/.test(input),
         onlyBinary: /^[01\s]+$/.test(input),
         onlyOctal: /^[0-7\s]+$/.test(input),
         onlyDecimal: /^[0-9\s,.-]+$/.test(input),
         onlyMorse: /^[\.\-\s/]+$/.test(input),
         onlyAlpha: /^[a-zA-Z\s]+$/.test(input),
+        onlyBacon: /^[ABab\s]+$/.test(input),
         hasPercent: /%[0-9A-Fa-f]{2}/.test(input),
         hasHtmlEntities: /&[a-z]+;|&#[0-9]+;/.test(input),
         hasUnicodeEscape: /\\u[0-9a-fA-F]{4}/.test(input),
@@ -280,7 +279,7 @@ function analyzeInput(input) {
         hasBase85Markers: /<~.*~>/.test(input),
         avgWordLength: calculateAvgWordLength(input)
     };
-    
+
     return analysis;
 }
 
@@ -346,12 +345,12 @@ function prioritizeCiphers(analysis) {
     }
     
     // Base32 (all uppercase letters and digits 2-7)
-    if (/^[A-Z2-7=\s]+$/.test(analysis.onlyBase64)) {
+    if (analysis.onlyBase32) {
         prioritized.push('base32');
     }
-    
-    // Bacon cipher (only A and B)
-    if (/^[ABab\s]+$/.test(analysis.onlyAlpha)) {
+
+    // Bacon cipher (only A and B characters)
+    if (analysis.onlyBacon) {
         prioritized.push('bacon');
     }
     
@@ -456,9 +455,6 @@ function performEncode() {
         
         // Perform encoding
         const result = cipher.encode(cleanInput);
-        
-        // Sanitize and display output
-        const safeOutput = sanitizeOutput(result);
         displayEncodeOutput(result, false);
         
     } catch (error) {
@@ -480,24 +476,16 @@ function encodeAll() {
         const cleanInput = sanitizeInput(input);
         
         let results = '=== ENCODED WITH ALL CIPHERS ===\n\n';
-        
-        // Only use implemented ciphers
-        const implementedCiphers = [
-            'base64', 'base32', 'base16', 'base58', 'base85',
-            'hex', 'binary', 'octal', 'decimal',
-            'url', 'html', 'unicode',
-            'rot13', 'caesar', 'atbash', 'morse', 'reverse', 'bacon'
-        ];
-        
-        implementedCiphers.forEach(cipherId => {
+
+        CipherRegistry.ciphers.forEach(({ id: cipherId, name }) => {
             try {
                 const cipher = Ciphers[cipherId];
                 if (cipher && cipher.encode) {
                     const encoded = cipher.encode(cleanInput);
-                    results += `${cipherId.toUpperCase()}:\n${encoded}\n\n`;
+                    results += `${name.toUpperCase()}:\n${encoded}\n\n`;
                 }
             } catch (e) {
-                results += `${cipherId.toUpperCase()}: Encoding failed\n\n`;
+                results += `${name.toUpperCase()}: Encoding failed\n\n`;
             }
         });
         

@@ -15,8 +15,9 @@
 
         <div class="decoder-section">
             <div class="info">
-                <strong>About:</strong> Security analysts often encounter encoded malicious commands. 
+                <strong>About:</strong> Security analysts often encounter encoded malicious commands.
                 This tool supports 50+ encoding methods used in real-world attacks.
+                <span class="shortcut-hint">Tip: press <kbd>Ctrl+Enter</kbd> inside any input to run immediately. Use the <strong>→ Encode / → Decode</strong> buttons to pipe output between sections.</span>
             </div>
         </div>
 
@@ -54,7 +55,11 @@
                 <div class="input-group">
                     <label>Decoded Output</label>
                     <div class="output-box empty" id="decodeOutput">
-                        <button class="copy-btn" onclick="copyOutput('decode')">Copy</button>
+                        <div class="output-actions">
+                            <button class="output-btn" onclick="copyOutput('decode', this)">Copy</button>
+                            <button class="output-btn" onclick="downloadOutput('decode')">Download</button>
+                            <button class="output-btn send-btn" onclick="sendToEncode()" title="Use this output as Encode input">→ Encode</button>
+                        </div>
                         <span id="decodeOutputText">Your decoded text will show up here...</span>
                     </div>
                 </div>
@@ -91,7 +96,11 @@
                 <div class="input-group">
                     <label>Encoded Output</label>
                     <div class="output-box empty" id="encodeOutput">
-                        <button class="copy-btn" onclick="copyOutput('encode')">Copy</button>
+                        <div class="output-actions">
+                            <button class="output-btn" onclick="copyOutput('encode', this)">Copy</button>
+                            <button class="output-btn" onclick="downloadOutput('encode')">Download</button>
+                            <button class="output-btn send-btn" onclick="sendToDecode()" title="Use this output as Decode input">→ Decode</button>
+                        </div>
                         <span id="encodeOutputText">Your encoded text will appear here...</span>
                     </div>
                 </div>

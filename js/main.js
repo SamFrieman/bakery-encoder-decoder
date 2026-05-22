@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
     populateCipherSelects();
     setupSearchFunctionality();
     setupCharCounters();
+    setupKeyboardShortcuts();
 });
 
 // Populate both encode and decode cipher dropdowns
@@ -563,13 +564,13 @@ function displayEncodeOutput(text, isEmpty) {
 }
 
 // Copy output to clipboard
-function copyOutput(type) {
-    const textElement = type === 'decode' ? 
-        document.getElementById('decodeOutputText') : 
+function copyOutput(type, btn) {
+    const textElement = type === 'decode' ?
+        document.getElementById('decodeOutputText') :
         document.getElementById('encodeOutputText');
     const text = textElement.textContent;
-    
-    const btn = event.target;
+
+    if (!btn) btn = event && event.target;
     
     navigator.clipboard.writeText(text).then(() => {
         const originalText = btn.textContent;
@@ -617,4 +618,59 @@ function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+}
+
+// Pipe decode output into the encode input
+function sendToEncode() {
+    const outputBox = document.getElementById('decodeOutput');
+    if (outputBox.classList.contains('empty')) return;
+    const text = document.getElementById('decodeOutputText').textContent;
+    document.getElementById('encodeInput').value = text;
+    document.getElementById('encodeCharCount').textContent = `${text.length} / 50,000`;
+    document.getElementById('encodeInput').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    document.getElementById('encodeInput').focus();
+}
+
+// Pipe encode output into the decode input
+function sendToDecode() {
+    const outputBox = document.getElementById('encodeOutput');
+    if (outputBox.classList.contains('empty')) return;
+    const text = document.getElementById('encodeOutputText').textContent;
+    document.getElementById('decodeInput').value = text;
+    document.getElementById('decodeCharCount').textContent = `${text.length} / 50,000`;
+    document.getElementById('decodeInput').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    document.getElementById('decodeInput').focus();
+}
+
+// Download the output of the given section as a .txt file
+function downloadOutput(type) {
+    const outputBox = document.getElementById(type === 'decode' ? 'decodeOutput' : 'encodeOutput');
+    if (outputBox.classList.contains('empty')) return;
+    const text = document.getElementById(
+        type === 'decode' ? 'decodeOutputText' : 'encodeOutputText'
+    ).textContent;
+    const blob = new Blob([text], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = type === 'decode' ? 'decoded-output.txt' : 'encoded-output.txt';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+// Keyboard shortcuts: Ctrl+Enter triggers the relevant operation
+function setupKeyboardShortcuts() {
+    document.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+            e.preventDefault();
+            const active = document.activeElement;
+            if (active && active.id === 'encodeInput') {
+                performEncode();
+            } else {
+                performDecode();
+            }
+        }
+    });
 }
